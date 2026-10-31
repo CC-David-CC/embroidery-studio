@@ -22,15 +22,7 @@ are source. To upgrade, review the new release, licenses and API, update the
 pin and repeat testing before changing the shipped version. The latest-build
 asset can change upstream, so preserve the archive matching this hash.
 
-Open account files with **Open from My files**. The editor's native save/export
-is captured inside the editor window instead of downloading to the computer;
-choose the captured result and use **Save to My files** to persist it. The
-**Export stitches to My files** control directly exports the current design
-to the chosen machine format and account path. It reports export warnings;
-review the result and test-sew it. The app reports local save and background
-server sync separately. Closing before
-that step can lose captured work. Uploading from the computer remains an
-upstream editor feature. The app is not a security sandbox.
+Open account files with **Open from My files**, or open `.stitchfoundry` projects directly from Files. Upload from a computer in Files first. **Save project** captures the current editable design and saves it to My files in one step; choose its folder under **File locations and captured exports**. Saves check versions and ask before replacing an unrelated file. The editor's native save/export is also captured inside the window; select a captured result and use **Save captured file** to persist it. Captured results may represent an earlier editor state. The **Export stitches to My files** control exports the current design to a machine format and reports warnings. Review the result and test-sew it. The app warns about known unsaved edits, but the embedded editor's state and unusual asynchronous operations are not guaranteed to be detected. The app is not a security sandbox.
 
 ## Integration test
 
@@ -56,8 +48,7 @@ CODI_PHONE=1 ../active-system/.build/tools/node-v24.22.1-linux-x64/bin/node test
 
 The test creates isolated test accounts, opens both apps, verifies a converter
 preview and PES save, and creates a simple rectangle through the upstream API
-to check a DST export to My files. A separate test uses the embedded editor's
-native Save As dialog, saves the captured project to an isolated account,
+to check a DST export to My files. A separate test invokes the embedded editor's Save As command, saves the captured project to an isolated account,
 checks server disk, reopens it and exports stitches:
 
 ```sh
@@ -65,8 +56,7 @@ checks server disk, reopens it and exports stitches:
 ../active-system/.build/tools/node-v24.22.1-linux-x64/bin/node tests/stitchfoundry-native-save.test.mjs
 ```
 
-The native Save As test currently uses desktop-sized coordinates and needs
-the preview and Chromium started in separate shells. It does not verify
+The captured Save As test needs the preview and Chromium started in separate shells. It does not verify
 digitizing through the editor's own drawing tools, physical devices or stitch
 quality. The embedded upstream editor is crowded on narrow phone screens;
 physical phone usability remains unverified.
