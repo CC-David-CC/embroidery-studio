@@ -37,7 +37,7 @@ With that archive and the other app build dependencies prepared:
 
 ```sh
 python3 apps/system/embroidery-studio/prepare.py --archive .build/stitchfoundry-web-latest.zip
-../active-system/.venv/bin/python active-system/scripts/build-public-apps.py --output .build/embroidery-test-apps --node ../active-system/.build/tools/node-v24.22.1-linux-x64/bin/node
+../active-system/.venv/bin/python active-system/scripts/build-public-apps.py --output .build/embroidery-test-apps --apps embroidery-studio stitch-converter --node ../active-system/.build/tools/node-v24.22.1-linux-x64/bin/node
 ../active-system/.venv/bin/python -B active-system/scripts/run-simplified-local.py --port 18159 --isolated --browser-relay --apps-bundle .build/embroidery-test-apps
 ```
 
