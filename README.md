@@ -63,3 +63,5 @@ physical phone usability remains unverified.
 `CODI_TEST_URL` and `CODI_BROWSER_URL` can override the preview and debugging
 addresses. Stop the isolated preview and browser and remove their disposable
 test data after testing.
+
+A separate notice shows when My files detects that the linked project changed, is unavailable, or has conflicting copies; the current design remains open. Resolve conflicts in Files or save a copy. Overwrite checks use file metadata. Project, captured-file and machine-export destinations are captured when the action starts, and immediate conflicts are reported as local copies needing resolution. Detection depends on mirror sync. Local desktop, emulated-phone and 4K and live emulated-phone account tests cover a changed project, conflict during save, destination changes, a DST export and fresh-session recovery; the existing local native capture/reopen/export test also passed.
