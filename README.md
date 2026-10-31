@@ -9,6 +9,10 @@ The upstream project describes the build as pre-release and reports software
 round trips but no physical-machine sew-out yet; test on fabric before relying
 on an export. Individual format behavior must be verified independently.
 
+The earlier `0.14.0-rc.1` browser build panicked in Rust's system-time
+implementation. The pinned newer development build avoids that observed panic
+in the tested workflows; it is still pre-release software.
+
 Fetch `stitchfoundry-web-0.14.0.zip` from the official latest-build release, then run
 `python3 apps/system/embroidery-studio/prepare.py --archive PATH`. The script
 checks the exact hash, safely extracts known assets and moves the startup module
@@ -52,8 +56,20 @@ CODI_PHONE=1 ../active-system/.build/tools/node-v24.22.1-linux-x64/bin/node test
 
 The test creates isolated test accounts, opens both apps, verifies a converter
 preview and PES save, and creates a simple rectangle through the upstream API
-to check a DST export to My files. It does not test digitizing through the
-editor's own UI, native save capture, physical devices, or stitch quality.
+to check a DST export to My files. A separate test uses the embedded editor's
+native Save As dialog, saves the captured project to an isolated account,
+checks server disk, reopens it and exports stitches:
+
+```sh
+../active-system/.venv/bin/python -B active-system/scripts/run-simplified-local.py --port 18166 --isolated --browser-relay --apps-bundle .build/embroidery-test-apps
+../active-system/.build/tools/node-v24.22.1-linux-x64/bin/node tests/stitchfoundry-native-save.test.mjs
+```
+
+The native Save As test currently uses desktop-sized coordinates and needs
+the preview and Chromium started in separate shells. It does not verify
+digitizing through the editor's own drawing tools, physical devices or stitch
+quality. The embedded upstream editor is crowded on narrow phone screens;
+physical phone usability remains unverified.
 `CODI_TEST_URL` and `CODI_BROWSER_URL` can override the preview and debugging
 addresses. Stop the isolated preview and browser and remove their disposable
 test data after testing.
