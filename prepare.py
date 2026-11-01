@@ -25,7 +25,7 @@ def prepare(archive, local_dist, source_archive):
     h=hashlib.sha256()
     with source_archive.open('rb') as stream:
         for chunk in iter(lambda:stream.read(1024*1024),b''):h.update(chunk)
-    if h.hexdigest()!='c1df100e23531e223e2f4663481ae8cafebd2c48866d284ba2655c575fa4fab3':raise ValueError('Source archive hash mismatch')
+    if h.hexdigest()!='bf5f2b0c26d14c7c81f257139003ac3605027bf4e85ea5dbc71996837165bebe':raise ValueError('Source archive hash mismatch')
     local_dist=Path(local_dist)
     if not local_dist.is_dir() or {p.name for p in local_dist.iterdir()} != set(DIST_HASHES):
         raise ValueError('Unexpected local build contents')
