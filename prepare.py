@@ -79,7 +79,9 @@ def prepare(archive, local_dist):
         page.write_text(page_html.replace('<head>','<head>\n  '+policy,1))
         font_licenses=sorted('licenses/epaint-default-fonts-0.36.2/'+name for name in ('UFL.txt','OFL.txt','Hack-Regular.txt','emoji-icon-font-mit-license.txt'))
         if any(not (ROOT/name).is_file() for name in font_licenses):raise ValueError('Missing bundled font license')
-        manifest={'assets':sorted(assets+font_licenses+['examples/heart.svg'])}
+        dependency_notices='licenses/RUST_DEPENDENCY_NOTICES.txt'
+        if hashlib.sha256((ROOT/dependency_notices).read_bytes()).hexdigest()!='ef95487f79c701aa06342e6c0b0ba0da91ad6d8cb029255c8bbb6686d9adb370':raise ValueError('Dependency notice hash mismatch')
+        manifest={'assets':sorted(assets+font_licenses+[dependency_notices,'examples/heart.svg'])}
         (ROOT/'app.json').write_text(json.dumps(manifest,indent=2)+'\n')
         stage.rename(destination)
     return len(assets)

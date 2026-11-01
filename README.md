@@ -58,7 +58,7 @@ checkout root. The tested build used Rust 1.97, Trunk 0.21.14,
 wasm-bindgen 0.2.129 and wasm-opt version_123, with Cargo.lock unchanged.
 Inspect and copy the three resulting files into `.build/stitchfoundry-no-link-dist`.
 The exact pinned hashes must match; a different toolchain or source may need a
-new review and new pins. The archive's notices are retained. The four license texts for epaint's embedded fonts are packaged separately from the exact 0.36.2 crate. The rebuilt dependency license inventory still needs review before deployment.
+new review and new pins. The archive's notices are retained. The four license texts for epaint's embedded fonts are packaged separately from the exact 0.36.2 crate. The packaged dependency-notice collection covers the conservative resolved graph; review nested assets and source availability before deployment.
 
 ## Integration test
 
@@ -109,3 +109,5 @@ The normal app preparation and builder path has now also passed desktop and emul
 The rebuilt no-startup-link candidate uses WASM SHA-256 `219d4eb0093438da1656a5c554dabce533382e85938b11140623203e1cc63f0b`. Freshly patched source matched the build tree. Local desktop and emulated-phone tests confirmed no MakerFoundry request from an `open` startup link, blocked provider commands, save, sync, DST export and reopen. The first startup-link test incorrectly matched the local page URL containing the encoded link; the corrected hostname check passed. Dependency-license and remaining network-surface review remain before release.
 
 The current local candidate also guards edits made while an open or example confirmation is displayed and avoids competing Save As prompts. Desktop, emulated-phone and 4K local tests cover cancellation, changed targets, two-session project-change warnings, saving a copy, fresh-session reopen and listener cleanup. The broader dependency-notice review remains open; see `docs/EMBROIDERY_DEPENDENCY_INVENTORY.md`.
+
+Dependency notices for the 317-package conservative WASM normal/build graph are in `licenses/RUST_DEPENDENCY_NOTICES.txt`, including upstream texts matched to exact source revisions for packages whose published crate omitted root license files. Generate metadata with `cargo metadata --offline --locked --format-version 1 --filter-platform wasm32-unknown-unknown` on the pinned source, then run `python3 apps/system/embroidery-studio/collect_dependency_notices.py --metadata PATH --output PATH`. The collector reads the resolved crate cache and fetches pinned upstream notices; compare the generated SHA-256 with the pin in `prepare.py`. This is not a substitute for reviewing nested asset notices and distribution requirements.
