@@ -125,3 +125,11 @@ and My files picker; desktop and emulated-phone checks also exercised Open,
 Place, saving, synchronization and a fresh-session reopen. It is not live yet.
 Any change to this README or the desktop integration requires regenerating the
 corresponding-source archive and updating its pin before release.
+
+Opening or saving a project updates the desktop restore reference; opening the
+example clears the prior project reference. A missing or invalid project used
+to restore a window clears the failed reference without changing the original
+file. Local desktop and emulated-phone account tests cover project switching,
+Save As, server sync, refresh and stitch export after reopening; emulated-phone
+checks cover invalid and missing project fallback. Physical touch and machine
+compatibility remain unverified.
