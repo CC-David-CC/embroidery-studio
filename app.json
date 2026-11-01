@@ -1,6 +1,7 @@
 {
   "assets": [
     "examples/heart.svg",
+    "examples/stitched-rectangle.json",
     "licenses/RUST_DEPENDENCY_NOTICES.txt",
     "licenses/epaint-default-fonts-0.36.2/Hack-Regular.txt",
     "licenses/epaint-default-fonts-0.36.2/OFL.txt",

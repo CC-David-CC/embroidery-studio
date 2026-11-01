@@ -141,3 +141,7 @@ filename. Successful open, save or example selection clears the recovery target.
 Desktop and emulated-phone registered-account tests covered an injected read
 failure, separate scratch save, server sync, original-byte preservation and retry.
 Physical touch, conflict injection and machine stitching remain unverified.
+
+For a first machine-export exercise, choose **File → Try stitched rectangle…**. The sample is an editable rectangle with a fill stitch already assigned, so **Export stitches to My files…** can produce a machine file immediately. Save the editable project separately before changing it. It was generated locally with the pinned editor using `shape.rectangle` (40 × 30 points) and `embroidery.set` (`fill`); a local DST simulation produced 182 stitches. Stitch counts can change with settings or versions. Inspect and test-sew on scrap: a simulated export does not prove physical-machine compatibility or stitch quality.
+
+The matching source archive includes both bundled examples. `tests/embroidery-stitched-example-review.test.mjs` checks the sample’s real DST stitch output and editable-project save, account sync and fresh-session reopen on desktop and emulated phone. Physical touch and actual sew-out remain unverified.

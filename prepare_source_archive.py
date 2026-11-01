@@ -35,7 +35,7 @@ def archive(source,host_source,output):
   if file.is_symlink() or not file.is_file():raise ValueError('Invalid source file: '+name)
   files.append((name,file,mode))
  if output.exists() or output.is_symlink():raise ValueError('Output already exists')
- host_files=('index.mjs','file-bridge.mjs','style.css','app.json','README.md','prepare_local_source.py','prepare_file_bridge.py','prepare_source_archive.py','collect_dependency_notices.py')
+ host_files=('index.mjs','file-bridge.mjs','style.css','app.json','README.md','prepare_local_source.py','prepare_file_bridge.py','prepare_source_archive.py','collect_dependency_notices.py','examples/heart.svg','examples/stitched-rectangle.json')
  for name in host_files:
   f=host_source/name
   if f.is_symlink() or not f.is_file():raise ValueError('Missing host source: '+name)
