@@ -22,7 +22,7 @@ def replace_exact(text, old, new, count=1):
         raise ValueError(f'Unexpected source pattern count: {found}, expected {count}: {old[:100]!r}')
     return text.replace(old, new)
 
-def prepare(source):
+def prepare(source, remove_open_link=False):
     source = Path(source).resolve()
     def git(*args):
         return subprocess.check_output(['git', '-C', str(source), *args], text=True).strip()
@@ -38,6 +38,10 @@ def prepare(source):
     text = files[name]
     text = replace_exact(text, '    let ai_ctx = ctx.clone();\n', '')
     text = replace_exact(text, '        // Design from Prompt and Ask About Embroidery: the browser\'s fetch, the key kept by it.\n        http_post_async: Some(http_post_async(ai_ctx)),\n        secrets: Some(Box::new(BrowserSecrets)),\n', '        // Codi browser desktop: external provider and account services are unavailable.\n')
+    if remove_open_link:
+        start_link = text.index('                        // Open in StitchFoundry: `?open=`')
+        end_link = text.index('                        app\n', start_link)
+        text = text[:start_link] + '                        // Third-party design links are unavailable in the browser desktop.\n' + text[end_link:]
     start = text.index('/// HTTPS POSTs (Design from Prompt, Ask About Embroidery)')
     end = text.index('/// Sample Color from Screen in the browser:', start)
     text = text[:start] + text[end:]
@@ -91,4 +95,6 @@ def prepare(source):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('source', type=Path)
-    prepare(parser.parse_args().source)
+    parser.add_argument('--remove-open-link', action='store_true', help='Prepare the next candidate without third-party startup imports')
+    args = parser.parse_args()
+    prepare(args.source, remove_open_link=args.remove_open_link)
