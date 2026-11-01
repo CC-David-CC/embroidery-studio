@@ -1,9 +1,14 @@
 # Embroidery Studio
 
 This app packages an upstream StitchFoundry 0.14.0 development browser build
-(MIT OR Apache-2.0), associated with source commit
-`e3b80b2ce3f5a3e9cabd00a4d4824b65dc35a017`. The upstream web archive
-SHA-256 is `ebcba487093c414e57d634beff032ad60b300c8296f8fbaf44993920ff60c6c6`.
+(MIT OR Apache-2.0). The upstream web archive SHA-256 is
+`ebcba487093c414e57d634beff032ad60b300c8296f8fbaf44993920ff60c6c6`.
+The exact source commit for its WebAssembly has not been established. Earlier
+notes associated it with `e3b80b2ce3f5a3e9cabd00a4d4824b65dc35a017`, but the
+binary contains account and Ask About Embroidery source paths absent from that
+commit. Upstream commit `e5a88e038d4281c925c94538c1a2d6262b83b83f` predates
+the archive timestamp and its README, notices, assets list and licenses match
+the archive. It is a candidate for source review, not a verified build match.
 Its upstream notices and font licenses are included in the packaged assets.
 The upstream project describes the build as pre-release and reports software
 round trips but no physical-machine sew-out yet; test on fabric before relying
