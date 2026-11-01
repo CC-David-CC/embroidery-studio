@@ -13,9 +13,9 @@ ROOT=Path(__file__).resolve().parent
 ARCHIVE_SHA='ebcba487093c414e57d634beff032ad60b300c8296f8fbaf44993920ff60c6c6'
 PREFIX='stitchfoundry-web-0.14.0/'
 DIST_HASHES={
-    'index.html':'0dfcf4c9120ac6c4770f8a0f54471d83a5a40d94324d8020b249e4f714df27c6',
-    'vectorcraft-web-97f6bcd1ab4e712b.js':'ba04a80b5e728f017f8696907f3f384ea228f0b2bd8e4516ce441710aa9269a4',
-    'vectorcraft-web-97f6bcd1ab4e712b_bg.wasm':'b314e55951f6f47eed9f69734193d67e984972d4b2fcedbe8b67e695d6556b69',
+    'index.html':'27778a6ee29bfc8ba40f821ad808ec9e84e49ca7212e69ffa98822b609d105c7',
+    'vectorcraft-web-26ecfed1716fe7e1.js':'75383b75e069e174bd65261b56477aee8f0b82990e8b20fbc553794c1a4ac1aa',
+    'vectorcraft-web-26ecfed1716fe7e1_bg.wasm':'219d4eb0093438da1656a5c554dabce533382e85938b11140623203e1cc63f0b',
 }
 
 
@@ -65,7 +65,7 @@ def prepare(archive, local_dist):
             if not (stage/required).is_file():raise ValueError('Missing upstream notice: '+required)
         for name in DIST_HASHES:
             shutil.copyfile(local_dist/name,stage/name);assets.append('vendor/'+name)
-        (stage/'LOCAL_ONLY.txt').write_text('Browser build from StitchFoundry source e5a88e038d4281c925c94538c1a2d6262b83b83f, patched with prepare_local_source.py to disable third-party provider features. WASM SHA-256: '+DIST_HASHES['vectorcraft-web-97f6bcd1ab4e712b_bg.wasm']+'\nThe upstream release archive supplies notices and fonts, not executable code. This is not a verified source match for the earlier release binary.\n')
+        (stage/'LOCAL_ONLY.txt').write_text('Browser build from StitchFoundry source e5a88e038d4281c925c94538c1a2d6262b83b83f, patched with prepare_local_source.py to disable third-party provider features and MakerFoundry startup imports. WASM SHA-256: '+DIST_HASHES['vectorcraft-web-26ecfed1716fe7e1_bg.wasm']+'\nThe upstream release archive supplies notices and fonts, not executable code. This is not a verified source match for the earlier release binary.\n')
         assets.append('vendor/LOCAL_ONLY.txt')
         page=stage/'index.html';html=page.read_text();match=re.search(r'<script type="module">\s*(.*?)\s*</script>',html,re.S)
         if not match or html.count('<script type="module">')!=1:raise ValueError('Unexpected release startup script')

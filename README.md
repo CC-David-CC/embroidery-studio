@@ -38,7 +38,7 @@ The editor starts in local mode with a new blank design; no Foundry account is n
 candidate source commit `e5a88e038d4281c925c94538c1a2d6262b83b83f`. It removes
 the browser provider transport and secret store, removes provider commands from
 browser menus and the command palette, rejects their direct command IDs, and
-hides the StitchShop action in the jobs panel. It preserves those controls in
+hides the StitchShop action in the jobs panel, and removes the MakerFoundry startup-link importer. It preserves those controls in
 native builds. The browser availability check hides the prompt and redraw panel
 buttons when the provider service is absent.
 
@@ -56,7 +56,7 @@ from SIMPLIFIED. From that checkout's `apps/vectorcraft-web` directory run
 `trunk build --release`; its Trunk configuration writes `dist/web` at the
 checkout root. The tested build used Rust 1.97, Trunk 0.21.14,
 wasm-bindgen 0.2.129 and wasm-opt version_123, with Cargo.lock unchanged.
-Inspect and copy the three resulting files into `.build/stitchfoundry-local-dist`.
+Inspect and copy the three resulting files into `.build/stitchfoundry-no-link-dist`.
 The exact pinned hashes must match; a different toolchain or source may need a
 new review and new pins. The archive's notices are retained. The four license texts for epaint's embedded fonts are packaged separately from the exact 0.36.2 crate. The rebuilt dependency license inventory still needs review before deployment.
 
@@ -68,7 +68,7 @@ prepared `vendor/` are generated build inputs and are not tracked in Git.
 With that archive and the other app build dependencies prepared:
 
 ```sh
-python3 apps/system/embroidery-studio/prepare.py --archive .build/stitchfoundry-web-latest.zip --local-dist .build/stitchfoundry-local-dist
+python3 apps/system/embroidery-studio/prepare.py --archive .build/stitchfoundry-web-latest.zip --local-dist .build/stitchfoundry-no-link-dist
 ../active-system/.venv/bin/python active-system/scripts/build-public-apps.py --output .build/embroidery-test-apps --apps embroidery-studio stitch-converter --node ../active-system/.build/tools/node-v24.22.1-linux-x64/bin/node
 ../active-system/.venv/bin/python -B active-system/scripts/run-simplified-local.py --port 18159 --isolated --browser-relay --apps-bundle .build/embroidery-test-apps
 ```
@@ -102,6 +102,8 @@ test data after testing.
 
 A separate notice shows when My files detects that the linked project changed, is unavailable, or has conflicting copies; the current design remains open. Resolve conflicts in Files or save a copy. Overwrite checks use file metadata. Project, captured-file and machine-export destinations are captured when the action starts, and immediate conflicts are reported as local copies needing resolution. Detection depends on mirror sync. Local desktop, emulated-phone and 4K and live emulated-phone account tests cover a changed project, conflict during save, destination changes, a DST export and fresh-session recovery; the existing local native capture/reopen/export test also passed.
 
-The locally rebuilt `e5a88e0` candidate has now passed desktop and emulated-phone startup, same-origin and blocked cross-origin checks. Eight named provider/account commands are absent from its command catalog and direct execution rejects them. Desktop and emulated-phone tests saved a project, synchronized it, exported DST stitches and reopened the project in a fresh session; a separate test also exercised the example and Stitch Converter. The candidate was initially assembled in an isolated test directory; its source revision is a deliberate new build, not a proven match for the older shipped binary. Native account UI, the rest of the upstream network surface, physical touch, packaging and licensing still require review before release.
+The rebuilt `e5a88e0` no-startup-link candidate has now passed desktop and emulated-phone startup, same-origin and blocked cross-origin checks. Eight named provider/account commands are absent from its command catalog and direct execution rejects them. Desktop and emulated-phone tests saved a project, synchronized it, exported DST stitches and reopened the project in a fresh session; a separate test also exercised the example and Stitch Converter. The candidate was initially assembled in an isolated test directory; its source revision is a deliberate new build, not a proven match for the older shipped binary. Native account UI, the rest of the upstream network surface, physical touch, packaging and licensing still require review before release.
 
 The normal app preparation and builder path has now also passed desktop and emulated-phone provider-policy, save, sync, DST export and fresh-session reopen tests. Preparation rejected a tampered build and refused to overwrite existing vendor files. This remains local pending licensing and remaining network review.
+
+The rebuilt no-startup-link candidate uses WASM SHA-256 `219d4eb0093438da1656a5c554dabce533382e85938b11140623203e1cc63f0b`. Freshly patched source matched the build tree. Local desktop and emulated-phone tests confirmed no MakerFoundry request from an `open` startup link, blocked provider commands, save, sync, DST export and reopen. The first startup-link test incorrectly matched the local page URL containing the encoded link; the corrected hostname check passed. Dependency-license and remaining network-surface review remain before release.
