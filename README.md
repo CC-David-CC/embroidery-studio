@@ -104,6 +104,17 @@ A separate notice shows when My files detects that the linked project changed, i
 
 The earlier `e5a88e0` no-startup-link candidate passed desktop and emulated-phone startup, same-origin and blocked cross-origin checks. Eight named provider/account commands are absent from its command catalog and direct execution rejects them. Desktop and emulated-phone tests saved a project, synchronized it, exported DST stitches and reopened the project in a fresh session; a separate test also exercised the example and Stitch Converter. The candidate was initially assembled in an isolated test directory; its source revision is a deliberate new build, not a proven match for the older shipped binary. The later build with the My files bridge is now live; broader review of other service entry points and physical touch remains open.
 
+The current pinned browser build was checked again with a stitched design open:
+the eight identified account, AI, sew-out, MakerFoundry and StitchShop commands
+were absent from the catalog and rejected direct attempts, with no iframe
+requests observed during those attempts. The same local desktop and phone-sized
+account tests saved and synced the editable project and a real DST export, then
+reopened the project in a fresh browser. The patched source also gates the
+account chip on the disabled account command and removes the identified
+StitchShop jobs-panel button. Other entry points and same-origin traffic outside
+the tested command attempts remain unaudited; physical sewing and touch remain
+unverified. See `docs/DEFERRED_APP_FEATURES.md` for unavailable features.
+
 The normal app preparation and builder path passed desktop and emulated-phone provider-policy, save, sync, DST export and fresh-session reopen tests. Preparation rejected a tampered build and refused to overwrite existing vendor files. The later File bridge build is live; remaining network and nested-asset review is ongoing.
 
 The earlier rebuilt no-startup-link candidate used WASM SHA-256 `219d4eb0093438da1656a5c554dabce533382e85938b11140623203e1cc63f0b`. Freshly patched source matched the build tree. Local desktop and emulated-phone tests confirmed no MakerFoundry request from an `open` startup link, blocked provider commands, save, sync, DST export and reopen. The first startup-link test incorrectly matched the local page URL containing the encoded link; the corrected hostname check passed. The current live bridge hash is recorded below.
