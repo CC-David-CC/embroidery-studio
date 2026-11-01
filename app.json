@@ -1,6 +1,10 @@
 {
   "assets": [
     "examples/heart.svg",
+    "licenses/epaint-default-fonts-0.36.2/Hack-Regular.txt",
+    "licenses/epaint-default-fonts-0.36.2/OFL.txt",
+    "licenses/epaint-default-fonts-0.36.2/UFL.txt",
+    "licenses/epaint-default-fonts-0.36.2/emoji-icon-font-mit-license.txt",
     "vendor/ASSETS.txt",
     "vendor/HOSTING.txt",
     "vendor/LICENSE-APACHE.txt",

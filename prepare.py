@@ -77,7 +77,9 @@ def prepare(archive, local_dist):
         # the host page later adopts a broader connect policy.
         policy="<meta http-equiv=\"Content-Security-Policy\" content=\"connect-src 'self'; form-action 'none'; base-uri 'none'\">"
         page.write_text(page_html.replace('<head>','<head>\n  '+policy,1))
-        manifest={'assets':sorted(assets+['examples/heart.svg'])}
+        font_licenses=sorted('licenses/epaint-default-fonts-0.36.2/'+name for name in ('UFL.txt','OFL.txt','Hack-Regular.txt','emoji-icon-font-mit-license.txt'))
+        if any(not (ROOT/name).is_file() for name in font_licenses):raise ValueError('Missing bundled font license')
+        manifest={'assets':sorted(assets+font_licenses+['examples/heart.svg'])}
         (ROOT/'app.json').write_text(json.dumps(manifest,indent=2)+'\n')
         stage.rename(destination)
     return len(assets)

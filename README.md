@@ -58,8 +58,7 @@ checkout root. The tested build used Rust 1.97, Trunk 0.21.14,
 wasm-bindgen 0.2.129 and wasm-opt version_123, with Cargo.lock unchanged.
 Inspect and copy the three resulting files into `.build/stitchfoundry-local-dist`.
 The exact pinned hashes must match; a different toolchain or source may need a
-new review and new pins. The archive's notices are retained, but the rebuilt
-dependency license inventory still needs review before deployment.
+new review and new pins. The archive's notices are retained. The four license texts for epaint's embedded fonts are packaged separately from the exact 0.36.2 crate. The rebuilt dependency license inventory still needs review before deployment.
 
 ## Integration test
 
