@@ -29,6 +29,26 @@ asset can change upstream, so preserve the archive matching this hash.
 
 The editor starts in local mode with a new blank design; no Foundry account is needed. Use the editor's **File** menu. **Open from My files** opens account files; upload from a computer in Files first. **Open example…** loads the bundled heart SVG. **Save project** saves to `/Embroidery.stitchfoundry`; **Save project as…** lets you choose a different path in My files. Saves check versions and ask before replacing an unrelated file. The editor's native save/export is also captured inside the window. Choose a result under **Captured editor files**, then use **Save selected captured file…** to persist it. Captured results may represent an earlier editor state. **Export stitches to My files…** exports the current design in the selected machine format and reports warnings. Review the result and test-sew it. The upstream Sign In action is replaced by a Local label. The bundled editor still contains upstream account and AI screens; its app-specific browser policy blocks direct third-party connections and form submissions, but covering Sign In does not remove every entry point. Those features are not supported and remain gated pending removal or an internal service; see `docs/DEFERRED_APP_FEATURES.md`. The app warns about known unsaved edits, but the embedded editor's state and unusual asynchronous operations are not guaranteed to be detected. The app is not a security sandbox.
 
+## Local-only source candidate
+
+`prepare_local_source.py` applies a fail-closed patch to a clean checkout of
+candidate source commit `e5a88e038d4281c925c94538c1a2d6262b83b83f`. It removes
+the browser provider transport and secret store, removes provider commands from
+browser menus and the command palette, rejects their direct command IDs, and
+hides the StitchShop action in the jobs panel. It preserves those controls in
+native builds. The browser availability check hides the prompt and redraw panel
+buttons when the provider service is absent.
+
+This is an unverified candidate: it has not yet been compiled, exercised, or
+shown to match the pinned upstream archive. The existing page CSP remains a
+separate restriction. Before using a rebuilt binary, verify all browser entry
+points and ordinary open/edit/save/export workflows, inspect phone and desktop
+UI, and remove the current fixed-position Sign In cover if the native account
+button is absent. The `CODI_LOCAL_ONLY_CANDIDATE=1` option in
+`tests/embroidery-provider-policy.test.mjs` checks that the provider commands
+are absent from the catalog and reject direct execution; it does not replace
+visual or network checks.
+
 ## Integration test
 
 From the SIMPLIFIED directory, the currently retained pinned archive is
