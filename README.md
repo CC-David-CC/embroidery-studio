@@ -116,6 +116,4 @@ The File menu includes **Editor source and licenses**, a pinned archive of the e
 
 The next candidate also applies `prepare_file_bridge.py` after
 `prepare_local_source.py` to connect upstream Open and Place to My files.
-Rebuild and verify the WebAssembly and corresponding-source archive together;
-the earlier candidate's pinned binaries and source archive do not contain this
-bridge. Open and Place require real editor workflow testing before release.
+The bridge candidate WebAssembly SHA-256 is `4599a7093dcb85cc2a8f0a3d4930629eb20524e1c948264af55b4011f5eaa92d`. Rebuild and verify the WebAssembly and corresponding-source archive together; the earlier candidate does not contain this bridge. Open and Place require real editor workflow testing before release.

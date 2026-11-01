@@ -13,9 +13,9 @@ ROOT=Path(__file__).resolve().parent
 ARCHIVE_SHA='ebcba487093c414e57d634beff032ad60b300c8296f8fbaf44993920ff60c6c6'
 PREFIX='stitchfoundry-web-0.14.0/'
 DIST_HASHES={
-    'index.html':'27778a6ee29bfc8ba40f821ad808ec9e84e49ca7212e69ffa98822b609d105c7',
-    'vectorcraft-web-26ecfed1716fe7e1.js':'75383b75e069e174bd65261b56477aee8f0b82990e8b20fbc553794c1a4ac1aa',
-    'vectorcraft-web-26ecfed1716fe7e1_bg.wasm':'219d4eb0093438da1656a5c554dabce533382e85938b11140623203e1cc63f0b',
+    'index.html':'681b68fbf8f37fe3531a5f522fba3d3fac00b69807fc936a1def72e0ce41666a',
+    'vectorcraft-web-78d9970330c6ad52.js':'032acacb4f8ee9db8d3c2174d2f0edfe4b33f10551b73bfaf08179810356d5b3',
+    'vectorcraft-web-78d9970330c6ad52_bg.wasm':'4599a7093dcb85cc2a8f0a3d4930629eb20524e1c948264af55b4011f5eaa92d',
 }
 
 
@@ -25,7 +25,7 @@ def prepare(archive, local_dist, source_archive):
     h=hashlib.sha256()
     with source_archive.open('rb') as stream:
         for chunk in iter(lambda:stream.read(1024*1024),b''):h.update(chunk)
-    if h.hexdigest()!='4c34bcd23a17dc8bf10c4677988352ff91fe09ce8fba6aada63f397e1457729c':raise ValueError('Source archive hash mismatch')
+    if h.hexdigest()!='cbe03f662e250e7d7e26bf474d41d70dc7ac3bcc9fe8d069e5c4d322d6ecbd3b':raise ValueError('Source archive hash mismatch')
     local_dist=Path(local_dist)
     if not local_dist.is_dir() or {p.name for p in local_dist.iterdir()} != set(DIST_HASHES):
         raise ValueError('Unexpected local build contents')
@@ -72,7 +72,7 @@ def prepare(archive, local_dist, source_archive):
             shutil.copyfile(local_dist/name,stage/name);assets.append('vendor/'+name)
         shutil.copyfile(source_archive,stage/'corresponding-source.zip');assets.append('vendor/corresponding-source.zip')
         shutil.copyfile(ROOT/'prepare.py',stage/'prepare.py.txt');assets.append('vendor/prepare.py.txt')
-        (stage/'LOCAL_ONLY.txt').write_text('Browser build from StitchFoundry source e5a88e038d4281c925c94538c1a2d6262b83b83f, patched with prepare_local_source.py to disable third-party provider features and MakerFoundry startup imports. WASM SHA-256: '+DIST_HASHES['vectorcraft-web-26ecfed1716fe7e1_bg.wasm']+'\nThe upstream release archive supplies notices and fonts, not executable code. This is not a verified source match for the earlier release binary.\n')
+        (stage/'LOCAL_ONLY.txt').write_text('Browser build from StitchFoundry source e5a88e038d4281c925c94538c1a2d6262b83b83f, patched with prepare_local_source.py and prepare_file_bridge.py to disable provider features and route Open and Place through My files. WASM SHA-256: '+DIST_HASHES['vectorcraft-web-78d9970330c6ad52_bg.wasm']+'\nThe upstream release archive supplies notices and fonts, not executable code. This is not a verified source match for the earlier release binary.\n')
         assets.append('vendor/LOCAL_ONLY.txt')
         page=stage/'index.html';html=page.read_text();match=re.search(r'<script type="module">\s*(.*?)\s*</script>',html,re.S)
         if not match or html.count('<script type="module">')!=1:raise ValueError('Unexpected release startup script')

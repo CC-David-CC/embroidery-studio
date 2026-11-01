@@ -3,7 +3,8 @@ export function createFileBridge({host,getApi,valid,getRevision,mark,tell,isBusy
  let disposed=false,unbind=()=>{};
  const alive=()=>!disposed&&valid();
  async function place(){
-  if(!alive()||isBusy())return;
+  if(!alive())return;
+  if(isBusy()){tell('Please wait for the current file action to finish.');return;}
   const revision=getRevision();setBusy(true);
   try{
    const api=getApi();if(typeof api?.placeFile!=='function')throw Error('Place from My files is unavailable in this editor build.');
