@@ -68,7 +68,7 @@ prepared `vendor/` are generated build inputs and are not tracked in Git.
 With that archive and the other app build dependencies prepared:
 
 ```sh
-python3 apps/system/embroidery-studio/prepare.py --archive .build/stitchfoundry-web-latest.zip --local-dist .build/stitchfoundry-no-link-dist
+python3 apps/system/embroidery-studio/prepare.py --archive .build/stitchfoundry-web-latest.zip --local-dist .build/stitchfoundry-no-link-dist --source-archive .build/stitchfoundry-final-source.zip
 ../active-system/.venv/bin/python active-system/scripts/build-public-apps.py --output .build/embroidery-test-apps --apps embroidery-studio stitch-converter --node ../active-system/.build/tools/node-v24.22.1-linux-x64/bin/node
 ../active-system/.venv/bin/python -B active-system/scripts/run-simplified-local.py --port 18159 --isolated --browser-relay --apps-bundle .build/embroidery-test-apps
 ```
@@ -111,3 +111,5 @@ The rebuilt no-startup-link candidate uses WASM SHA-256 `219d4eb0093438da1656a5c
 The current local candidate also guards edits made while an open or example confirmation is displayed and avoids competing Save As prompts. Desktop, emulated-phone and 4K local tests cover cancellation, changed targets, two-session project-change warnings, saving a copy, fresh-session reopen and listener cleanup. The broader dependency-notice review remains open; see `docs/EMBROIDERY_DEPENDENCY_INVENTORY.md`.
 
 Dependency notices for the 317-package conservative WASM normal/build graph are in `licenses/RUST_DEPENDENCY_NOTICES.txt`, including upstream texts matched to exact source revisions for packages whose published crate omitted root license files. Generate metadata with `cargo metadata --offline --locked --format-version 1 --filter-platform wasm32-unknown-unknown` on the pinned source, then run `python3 apps/system/embroidery-studio/collect_dependency_notices.py --metadata PATH --output PATH`. The collector reads the resolved crate cache and fetches pinned upstream notices; compare the generated SHA-256 with the pin in `prepare.py`. This is not a substitute for reviewing nested asset notices and distribution requirements.
+
+The File menu includes **Editor source and licenses**, a pinned archive of the exact patched StitchFoundry checkout and desktop integration sources. To recreate it, run `prepare_source_archive.py --source PATH_TO_PATCHED_CHECKOUT --host-source apps/system/embroidery-studio --output PATH.zip`. It rejects a different commit, unexpected changes or mismatched patches and excludes generated builds and dependency caches. The archive does not bundle dependency source; Cargo.lock and the accompanying dependency notice collection identify those dependencies. The exact host packaging script is distributed alongside the source archive as `prepare.py.txt` (rather than inside the archive, because it pins that archive’s hash).

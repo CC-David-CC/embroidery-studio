@@ -20,7 +20,12 @@ DIST_HASHES={
 
 
 
-def prepare(archive, local_dist):
+def prepare(archive, local_dist, source_archive):
+    source_archive=Path(source_archive)
+    h=hashlib.sha256()
+    with source_archive.open('rb') as stream:
+        for chunk in iter(lambda:stream.read(1024*1024),b''):h.update(chunk)
+    if h.hexdigest()!='4c34bcd23a17dc8bf10c4677988352ff91fe09ce8fba6aada63f397e1457729c':raise ValueError('Source archive hash mismatch')
     local_dist=Path(local_dist)
     if not local_dist.is_dir() or {p.name for p in local_dist.iterdir()} != set(DIST_HASHES):
         raise ValueError('Unexpected local build contents')
@@ -65,6 +70,8 @@ def prepare(archive, local_dist):
             if not (stage/required).is_file():raise ValueError('Missing upstream notice: '+required)
         for name in DIST_HASHES:
             shutil.copyfile(local_dist/name,stage/name);assets.append('vendor/'+name)
+        shutil.copyfile(source_archive,stage/'corresponding-source.zip');assets.append('vendor/corresponding-source.zip')
+        shutil.copyfile(ROOT/'prepare.py',stage/'prepare.py.txt');assets.append('vendor/prepare.py.txt')
         (stage/'LOCAL_ONLY.txt').write_text('Browser build from StitchFoundry source e5a88e038d4281c925c94538c1a2d6262b83b83f, patched with prepare_local_source.py to disable third-party provider features and MakerFoundry startup imports. WASM SHA-256: '+DIST_HASHES['vectorcraft-web-26ecfed1716fe7e1_bg.wasm']+'\nThe upstream release archive supplies notices and fonts, not executable code. This is not a verified source match for the earlier release binary.\n')
         assets.append('vendor/LOCAL_ONLY.txt')
         page=stage/'index.html';html=page.read_text();match=re.search(r'<script type="module">\s*(.*?)\s*</script>',html,re.S)
@@ -88,4 +95,4 @@ def prepare(archive, local_dist):
 
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--archive',type=Path,required=True);p.add_argument('--local-dist',type=Path,required=True);a=p.parse_args();print('Prepared',prepare(a.archive,a.local_dist),'release files.')
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--archive',type=Path,required=True);p.add_argument('--local-dist',type=Path,required=True);p.add_argument('--source-archive',type=Path,required=True);a=p.parse_args();print('Prepared',prepare(a.archive,a.local_dist,a.source_archive),'release files.')
