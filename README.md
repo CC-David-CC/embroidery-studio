@@ -156,3 +156,15 @@ Physical touch, conflict injection and machine stitching remain unverified.
 For a first machine-export exercise, choose **File → Try stitched rectangle…**. The sample is an editable rectangle with a fill stitch already assigned, so **Export stitches to My files…** can produce a machine file immediately. Save the editable project separately before changing it. It was generated locally with the pinned editor using `shape.rectangle` (40 × 30 points) and `embroidery.set` (`fill`); a local DST simulation produced 182 stitches. Stitch counts can change with settings or versions. Inspect and test-sew on scrap: a simulated export does not prove physical-machine compatibility or stitch quality.
 
 The matching source archive includes both bundled examples. `tests/embroidery-stitched-example-review.test.mjs` checks the sample’s real DST stitch output and editable-project save, account sync and fresh-session reopen on desktop and emulated phone. Physical touch and actual sew-out remain unverified.
+
+Machine exports and captured-file saves keep the window protected while they
+are waiting for a destination, storage or editor work. Closing asks before
+interrupting the operation. A detected editor interaction while choosing or
+rendering a machine export stops that export; if the design changes after a
+write begins, the saved file is identified as an earlier export and newer work
+remains unsaved. Changing the machine format during a write keeps the newer
+format's suggested filename. Local registered-account desktop and emulated-
+phone tests cover held storage, close cancellation, captured-project sync,
+real DST export, edits during render and write, and fresh project reopening.
+The interaction detector is conservative and cannot prove every programmatic
+editor change was detected. Physical touch and machine sew-out remain untested.
