@@ -113,3 +113,9 @@ The current local candidate also guards edits made while an open or example conf
 Dependency notices for the 317-package conservative WASM normal/build graph are in `licenses/RUST_DEPENDENCY_NOTICES.txt`, including upstream texts matched to exact source revisions for packages whose published crate omitted root license files. Generate metadata with `cargo metadata --offline --locked --format-version 1 --filter-platform wasm32-unknown-unknown` on the pinned source, then run `python3 apps/system/embroidery-studio/collect_dependency_notices.py --metadata PATH --output PATH`. The collector reads the resolved crate cache and fetches pinned upstream notices; compare the generated SHA-256 with the pin in `prepare.py`. This is not a substitute for reviewing nested asset notices and distribution requirements.
 
 The File menu includes **Editor source and licenses**, a pinned archive of the exact patched StitchFoundry checkout and desktop integration sources. To recreate it, run `prepare_source_archive.py --source PATH_TO_PATCHED_CHECKOUT --host-source apps/system/embroidery-studio --output PATH.zip`. It rejects a different commit, unexpected changes or mismatched patches and excludes generated builds and dependency caches. The archive does not bundle dependency source; Cargo.lock and the accompanying dependency notice collection identify those dependencies. The exact host packaging script is distributed alongside the source archive as `prepare.py.txt` (rather than inside the archive, because it pins that archive’s hash).
+
+The next candidate also applies `prepare_file_bridge.py` after
+`prepare_local_source.py` to connect upstream Open and Place to My files.
+Rebuild and verify the WebAssembly and corresponding-source archive together;
+the earlier candidate's pinned binaries and source archive do not contain this
+bridge. Open and Place require real editor workflow testing before release.

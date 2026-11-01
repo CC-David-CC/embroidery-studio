@@ -8,7 +8,9 @@ import zipfile
 
 COMMIT='e5a88e038d4281c925c94538c1a2d6262b83b83f'
 PATCHED={
- 'apps/vectorcraft-web/src/web.rs':'469768a0fef4f9314808a58a9b4608d7d89576d42ff821c0b69e6a2a96c912cd',
+ 'apps/vectorcraft-web/src/web.rs':'b6395eccff22fd9fd11e2715bc4f73f4d42b04b2998418efea81e2b9de073a04',
+ 'apps/vectorcraft-web/src/api.rs':'e54b286acffe1fc300925ffdccc4ac2b5cd9ec62e838c76d9e041dbfcdc43371',
+ 'crates/ui-egui/src/embroidery/viewer.rs':'79174e5d0586dbe4caa284d19cde5fd04b19ae5f18c0de40f2cdcef330970206',
  'crates/ui-egui/src/menus.rs':'43a3e86840fbfb37328a86e435e4432067fa07267e14f570ceef2f1ea0d6af1e',
  'crates/ui-egui/src/embroidery/panel.rs':'d59159c5621d33f800051566a27cc4f7c861bfb22f590ec00d041386cc56d879',
  'crates/ui-egui/src/simple.rs':'62cdd1abf27407fcc6a537ab5b084bdb29c9373efad3969973a46cb58fdc2ec3',
@@ -33,11 +35,11 @@ def archive(source,host_source,output):
   if file.is_symlink() or not file.is_file():raise ValueError('Invalid source file: '+name)
   files.append((name,file,mode))
  if output.exists() or output.is_symlink():raise ValueError('Output already exists')
- host_files=('index.mjs','style.css','app.json','README.md','prepare_local_source.py','prepare_source_archive.py','collect_dependency_notices.py')
+ host_files=('index.mjs','file-bridge.mjs','style.css','app.json','README.md','prepare_local_source.py','prepare_file_bridge.py','prepare_source_archive.py','collect_dependency_notices.py')
  for name in host_files:
   f=host_source/name
   if f.is_symlink() or not f.is_file():raise ValueError('Missing host source: '+name)
- note=('Patched StitchFoundry browser source\nUpstream: https://github.com/Stitchwright/StitchFoundry/tree/'+COMMIT+'\nRevision: '+COMMIT+'\nThe five modified files remove browser provider transport, account actions, and MakerFoundry startup imports. See the host app source and prepare_local_source.py for the patch. Cargo.lock pins dependencies. Build instructions are in apps/vectorcraft-web/Trunk.toml and the host app README. This archive does not include generated assets or the dependency cache.\n').encode()
+ note=('Patched StitchFoundry browser source\nUpstream: https://github.com/Stitchwright/StitchFoundry/tree/'+COMMIT+'\nRevision: '+COMMIT+'\nThe modified files remove provider transport, account actions and MakerFoundry startup imports, and connect file actions to My files. See the host app source, prepare_local_source.py and prepare_file_bridge.py for the patches. Cargo.lock pins dependencies. Build instructions are in apps/vectorcraft-web/Trunk.toml and the host app README. This archive does not include generated assets or the dependency cache.\n').encode()
  with zipfile.ZipFile(output,'x',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as z:
   def put(name,data,mode):
    info=zipfile.ZipInfo(name,(1980,1,1,0,0,0));info.create_system=3;info.external_attr=(int(mode,8)<<16);info.compress_type=zipfile.ZIP_DEFLATED;z.writestr(info,data,compress_type=zipfile.ZIP_DEFLATED,compresslevel=9)
