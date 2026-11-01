@@ -133,3 +133,11 @@ file. Local desktop and emulated-phone account tests cover project switching,
 Save As, server sync, refresh and stitch export after reopening; emulated-phone
 checks cover invalid and missing project fallback. Physical touch and machine
 compatibility remain unverified.
+
+A temporary read failure or conflict when restoring a file keeps its reference
+and offers **Retry saved file**. A separate blank scratch design is available;
+if the original is the default project filename, Save uses a different recovery
+filename. Successful open, save or example selection clears the recovery target.
+Desktop and emulated-phone registered-account tests covered an injected read
+failure, separate scratch save, server sync, original-byte preservation and retry.
+Physical touch, conflict injection and machine stitching remain unverified.
