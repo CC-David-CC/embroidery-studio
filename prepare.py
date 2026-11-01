@@ -42,7 +42,13 @@ def prepare(archive):
         page=stage/'index.html';html=page.read_text();match=re.search(r'<script type="module">\s*(.*?)\s*</script>',html,re.S)
         if not match or html.count('<script type="module">')!=1:raise ValueError('Unexpected release startup script')
         (stage/'entry.mjs').write_text(match.group(1)+'\n');assets.append('vendor/entry.mjs')
-        page.write_text(html[:match.start()]+'<script type="module" src="./entry.mjs"></script>'+html[match.end():])
+        page_html=html[:match.start()]+'<script type="module" src="./entry.mjs"></script>'+html[match.end():]
+        if page_html.count('<head>')!=1:raise ValueError('Unexpected release head')
+        # The editor is local-only. Its WASM contains optional provider/account
+        # integrations, so keep direct third-party connections blocked even if
+        # the host page later adopts a broader connect policy.
+        policy="<meta http-equiv=\"Content-Security-Policy\" content=\"connect-src 'self'; form-action 'none'; base-uri 'none'\">"
+        page.write_text(page_html.replace('<head>','<head>\n  '+policy,1))
         manifest={'assets':sorted(assets+['examples/heart.svg'])}
         (ROOT/'app.json').write_text(json.dumps(manifest,indent=2)+'\n')
         stage.rename(destination)
