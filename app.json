@@ -5,6 +5,7 @@
     "vendor/HOSTING.txt",
     "vendor/LICENSE-APACHE.txt",
     "vendor/LICENSE-MIT.txt",
+    "vendor/LOCAL_ONLY.txt",
     "vendor/NOTICE.txt",
     "vendor/OFL-biz-ud-mincho.txt",
     "vendor/OFL-biz-ud-pgothic.txt",
@@ -38,7 +39,7 @@
     "vendor/licenses/pdf-backend/hayro-jbig2/LICENSE-MIT.txt",
     "vendor/licenses/pdf-backend/hayro-syntax/LICENSE-APACHE.txt",
     "vendor/licenses/pdf-backend/hayro-syntax/LICENSE-MIT.txt",
-    "vendor/vectorcraft-web-fa0268b955fcfa41.js",
-    "vendor/vectorcraft-web-fa0268b955fcfa41_bg.wasm"
+    "vendor/vectorcraft-web-97f6bcd1ab4e712b.js",
+    "vendor/vectorcraft-web-97f6bcd1ab4e712b_bg.wasm"
   ]
 }

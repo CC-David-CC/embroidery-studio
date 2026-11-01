@@ -18,16 +18,19 @@ The earlier `0.14.0-rc.1` browser build panicked in Rust's system-time
 implementation. The pinned newer development build avoids that observed panic
 in the tested workflows; it is still pre-release software.
 
-Fetch `stitchfoundry-web-0.14.0.zip` from the official latest-build release, then run
-`python3 apps/system/embroidery-studio/prepare.py --archive PATH`. The script
-checks the exact hash, safely extracts known assets and moves the startup module
-to a same-origin external file for the desktop CSP. The generated page also applies `connect-src 'self'` and `form-action 'none'` to restrict direct third-party connections and forms. This is an extra browser policy, not proof that all provider-related interface or same-origin paths are removed. The generated `vendor/`
-files stay out of Git; the app manifest, preparation code and documentation
-are source. To upgrade, review the new release, licenses and API, update the
-pin and repeat testing before changing the shipped version. The latest-build
-asset can change upstream, so preserve the archive matching this hash.
+The local-only candidate is built from source commit
+`e5a88e038d4281c925c94538c1a2d6262b83b83f`, patched with
+`prepare_local_source.py` in a clean checkout. Build the browser target using
+its locked dependencies and Trunk release build, then supply its three output
+files via `--local-dist`. The separately pinned upstream archive supplies fonts
+and notices; its executable files are discarded. Preparation validates exact
+hashes for the archive and each local build artifact and applies the page CSP.
+Generated `vendor/` assets are not tracked in Git. The candidate has not yet
+been deployed; the older live binary has different, unverified provenance.
+When upgrading, review the new source and dependency licenses, update the pins,
+and repeat the workflow and network tests.
 
-The editor starts in local mode with a new blank design; no Foundry account is needed. Use the editor's **File** menu. **Open from My files** opens account files; upload from a computer in Files first. **Open example…** loads the bundled heart SVG. **Save project** saves to `/Embroidery.stitchfoundry`; **Save project as…** lets you choose a different path in My files. Saves check versions and ask before replacing an unrelated file. The editor's native save/export is also captured inside the window. Choose a result under **Captured editor files**, then use **Save selected captured file…** to persist it. Captured results may represent an earlier editor state. **Export stitches to My files…** exports the current design in the selected machine format and reports warnings. Review the result and test-sew it. The upstream Sign In action is replaced by a Local label. The bundled editor still contains upstream account and AI screens; its app-specific browser policy blocks direct third-party connections and form submissions, but covering Sign In does not remove every entry point. Those features are not supported and remain gated pending removal or an internal service; see `docs/DEFERRED_APP_FEATURES.md`. The app warns about known unsaved edits, but the embedded editor's state and unusual asynchronous operations are not guaranteed to be detected. The app is not a security sandbox.
+The editor starts in local mode with a new blank design; no Foundry account is needed. Use the editor's **File** menu. **Open from My files** opens account files; upload from a computer in Files first. **Open example…** loads the bundled heart SVG. **Save project** saves to `/Embroidery.stitchfoundry`; **Save project as…** lets you choose a different path in My files. Saves check versions and ask before replacing an unrelated file. The editor's native save/export is also captured inside the window. Choose a result under **Captured editor files**, then use **Save selected captured file…** to persist it. Captured results may represent an earlier editor state. **Export stitches to My files…** exports the current design in the selected machine format and reports warnings. Review the result and test-sew it. The local-only candidate removes the browser provider transport and account actions, with CSP as a separate restriction. The older live editor still contains upstream account and AI screens and has not received this candidate. Those features are not supported and remain gated pending removal or an internal service; see `docs/DEFERRED_APP_FEATURES.md`. The app warns about known unsaved edits, but the embedded editor's state and unusual asynchronous operations are not guaranteed to be detected. The app is not a security sandbox.
 
 ## Local-only source candidate
 
@@ -39,15 +42,24 @@ hides the StitchShop action in the jobs panel. It preserves those controls in
 native builds. The browser availability check hides the prompt and redraw panel
 buttons when the provider service is absent.
 
-This is an unverified candidate: it has not yet been compiled, exercised, or
-shown to match the pinned upstream archive. The existing page CSP remains a
+The candidate has been compiled and exercised locally; it is not shown to match the pinned upstream archive. The existing page CSP remains a
 separate restriction. Before using a rebuilt binary, verify all browser entry
 points and ordinary open/edit/save/export workflows, inspect phone and desktop
-UI, and remove the current fixed-position Sign In cover if the native account
-button is absent. The `CODI_LOCAL_ONLY_CANDIDATE=1` option in
+UI, and review the remaining network surface and dependency licenses. The `CODI_LOCAL_ONLY_CANDIDATE=1` option in
 `tests/embroidery-provider-policy.test.mjs` checks that the provider commands
 are absent from the catalog and reject direct execution; it does not replace
 visual or network checks.
+
+For a rebuild, check out the pinned commit in a disposable clean source tree,
+then run `python3 apps/system/embroidery-studio/prepare_local_source.py PATH`
+from SIMPLIFIED. From that checkout's `apps/vectorcraft-web` directory run
+`trunk build --release`; its Trunk configuration writes `dist/web` at the
+checkout root. The tested build used Rust 1.97, Trunk 0.21.14,
+wasm-bindgen 0.2.129 and wasm-opt version_123, with Cargo.lock unchanged.
+Inspect and copy the three resulting files into `.build/stitchfoundry-local-dist`.
+The exact pinned hashes must match; a different toolchain or source may need a
+new review and new pins. The archive's notices are retained, but the rebuilt
+dependency license inventory still needs review before deployment.
 
 ## Integration test
 
@@ -57,7 +69,7 @@ prepared `vendor/` are generated build inputs and are not tracked in Git.
 With that archive and the other app build dependencies prepared:
 
 ```sh
-python3 apps/system/embroidery-studio/prepare.py --archive .build/stitchfoundry-web-latest.zip
+python3 apps/system/embroidery-studio/prepare.py --archive .build/stitchfoundry-web-latest.zip --local-dist .build/stitchfoundry-local-dist
 ../active-system/.venv/bin/python active-system/scripts/build-public-apps.py --output .build/embroidery-test-apps --apps embroidery-studio stitch-converter --node ../active-system/.build/tools/node-v24.22.1-linux-x64/bin/node
 ../active-system/.venv/bin/python -B active-system/scripts/run-simplified-local.py --port 18159 --isolated --browser-relay --apps-bundle .build/embroidery-test-apps
 ```
@@ -91,4 +103,6 @@ test data after testing.
 
 A separate notice shows when My files detects that the linked project changed, is unavailable, or has conflicting copies; the current design remains open. Resolve conflicts in Files or save a copy. Overwrite checks use file metadata. Project, captured-file and machine-export destinations are captured when the action starts, and immediate conflicts are reported as local copies needing resolution. Detection depends on mirror sync. Local desktop, emulated-phone and 4K and live emulated-phone account tests cover a changed project, conflict during save, destination changes, a DST export and fresh-session recovery; the existing local native capture/reopen/export test also passed.
 
-The locally rebuilt `e5a88e0` candidate has now passed desktop and emulated-phone startup, same-origin and blocked cross-origin checks. Eight named provider/account commands are absent from its command catalog and direct execution rejects them. Desktop and emulated-phone tests saved a project, synchronized it, exported DST stitches and reopened the project in a fresh session; a separate test also exercised the example and Stitch Converter. The candidate was assembled only in an isolated test directory; its source revision is a deliberate new build, not a proven match for the older shipped binary. Native account UI, the rest of the upstream network surface, physical touch, packaging and licensing still require review before release.
+The locally rebuilt `e5a88e0` candidate has now passed desktop and emulated-phone startup, same-origin and blocked cross-origin checks. Eight named provider/account commands are absent from its command catalog and direct execution rejects them. Desktop and emulated-phone tests saved a project, synchronized it, exported DST stitches and reopened the project in a fresh session; a separate test also exercised the example and Stitch Converter. The candidate was initially assembled in an isolated test directory; its source revision is a deliberate new build, not a proven match for the older shipped binary. Native account UI, the rest of the upstream network surface, physical touch, packaging and licensing still require review before release.
+
+The normal app preparation and builder path has now also passed desktop and emulated-phone provider-policy, save, sync, DST export and fresh-session reopen tests. Preparation rejected a tampered build and refused to overwrite existing vendor files. This remains local pending licensing and remaining network review.
