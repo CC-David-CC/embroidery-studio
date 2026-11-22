@@ -9,7 +9,7 @@ export function createFileBridge({host,getApi,valid,getRevision,mark,tell,isBusy
   try{
    const api=getApi();if(typeof api?.placeFile!=='function')throw Error('Place from My files is unavailable in this editor build.');
    const selected=await host.storage.pickFile({signal:host.signal});if(!selected||!alive())return;
-   const c=await host.storage.mirrorFileContext(),path=c.path(selected),file=await c.files.read(path);
+   const c=await host.storage.workspaceMirrorContext(),path=c.path(selected),file=await c.files.read(path);
    if(!alive()||!c.valid())return;
    if(file.status==='conflict')throw Error('Resolve the file conflict in Files first.');
    if(file.data.byteLength>128*1024*1024)throw Error('File exceeds 128 MiB.');

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {createFileBridge} from "../../file-bridge.mjs";
 let selection='/art.svg',revision=0,valid=true,contextValid=true,busy=false,changed=0,opened=0,chosen,placed=[],messages=[],status='synced';const signal=new AbortController();
-const host={signal:signal.signal,storage:{pickFile:async()=>typeof selection==='function'?await selection():selection,mirrorFileContext:async()=>({path:x=>x,valid:()=>contextValid,files:{read:async()=>({data:new Uint8Array([1,2,3]),status})}})}};
+const host={signal:signal.signal,storage:{pickFile:async()=>typeof selection==='function'?await selection():selection,workspaceMirrorContext:async()=>({path:x=>x,valid:()=>contextValid,files:{read:async()=>({data:new Uint8Array([1,2,3]),status})}})}};
 const api={placeFile:(name,data)=>{placed.push([name,...data]);return true}};const bridge=createFileBridge({host,getApi:()=>api,valid:()=>valid,getRevision:()=>revision,mark:()=>changed++,tell:s=>messages.push(s),isBusy:()=>busy,setBusy:x=>busy=x,open:()=>opened++});
 await bridge.place();assert.deepEqual(placed,[['art.svg',1,2,3]]);assert.equal(changed,1);assert.equal(busy,false);
 status='conflict';await bridge.place();assert.equal(placed.length,1);assert.match(messages.at(-1),/conflict/);status='synced';
